@@ -2,31 +2,38 @@
 jobs:
 
   - name: knative application
-  ¦ plan:
-  ¦ ¦ - params:
-  ¦ ¦ ¦ ¦ kubectl: get nodes
-  ¦ ¦ ¦ ¦ app_name: knative-sandboox
-  ¦ ¦ ¦ ¦ repo:
-  ¦ ¦ ¦ ¦ ¦ url: https://github.com/metacoma/knative-sandboox.git
-  ¦ ¦ ¦ ¦ ¦ branch: master
-  ¦ ¦ ¦ ¦ dockerhub:
-  ¦ ¦ ¦ ¦ ¦ username: ((dockerhub_username))
-  ¦ ¦ ¦ ¦ ¦ password: ((dockerhub_password))
-  ¦ ¦ ¦ put: knative
+    plan:
+      - params:
+          kubectl: get nodes
+          app_name: knative-sandboox
+          repo:
+            url: https://github.com/metacoma/knative-sandboox.git
+            branch: master
+          dockerhub:
+            username: ((dockerhub_username))
+            password: ((dockerhub_password))
+        put: knative
 
 resource_types:
   - name: knative
-  ¦ source:
-  ¦ ¦ #repository: aptomisvc/concourse-knative-resource
-  ¦ ¦ repository: metacoma/concourse-resource-knative
-  ¦ ¦ tag: gcloud4
-  ¦ type: docker-image
+    source:
+      #repository: aptomisvc/concourse-knative-resource
+      repository: metacoma/concourse-resource-knative
+      tag: gcloud4
+    type: docker-image
 
 resources:
   - name: knative
-  ¦ source:
-  ¦ ¦ kubeconfig: ((kubeconfig))
-  ¦ type: knative
+    source:
+      kubeconfig: ((knative_kubeconfig))
+      gke:
+        service_account_json: ((service_account_json))
+        account: "k8s-admin@aptomi-main-216807.iam.gserviceaccount.com"
+        project: aptomi-main-216807
+        zone: us-central1-a
+        name: standard-cluster-1
+    type: knative
+
 ```
 ```
 jobs:
